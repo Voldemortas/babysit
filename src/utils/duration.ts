@@ -1,4 +1,4 @@
-import {Duration} from '../types'
+import {Duration} from 'src/types'
 
 export default function parseDuration(duration: Duration): number {
   if (typeof duration === 'number') {

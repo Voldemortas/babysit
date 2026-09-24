@@ -1,9 +1,9 @@
-import {CONFIG_SCHEMA} from '../schema'
+import {CONFIG_SCHEMA} from 'src/schema'
 import zod from 'zod'
 import {exists} from 'node:fs/promises'
-import parseJSONL from '../utils/parseJSONL'
-import bytesToString from '../utils/ram'
-import msToString from '../utils/time'
+import parseJSONL from 'src/utils/parseJSONL'
+import bytesToString from 'src/utils/ram'
+import msToString from 'src/utils/time'
 
 const FILE_NAME = '/babysit.json'
 

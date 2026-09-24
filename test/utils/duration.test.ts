@@ -1,4 +1,4 @@
-import parseDuration from '../../src/utils/duration'
+import parseDuration from 'src/utils/duration'
 import {describe, expect, it} from 'bun:test'
 
 describe('parse duration', () => {

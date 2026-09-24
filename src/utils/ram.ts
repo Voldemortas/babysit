@@ -1,4 +1,4 @@
-const TABLE = ['', 'k', 'm', 'g', 't', 'p']
+const TABLE = ['', 'ki', 'Mi', 'Gi', 'Ti', 'Pi']
 const BYTES_IN_PREFIX = 1024
 
 export default function bytesToString(bytes: number) {

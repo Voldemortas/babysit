@@ -13,6 +13,12 @@ Or install it globally with
 
 ## Set up
 
+To `.gitignore` add
+```hgignore
+.babysit
+```
+
+
 Create a `babysit.ts` file with a config 
 ```ts
 import babysit, {type Config} from "@voldemortas/babysit";
@@ -41,8 +47,8 @@ babysit(config)
 update your `package.json` scripts with:  
 ```jsonlc
 "scripts": {
-    //some preveious scripts
-    "babysit": "bun run babysit.ts"
+    //some previous scripts
+    "babysit": "bun babysit.ts"
 }
 ```
 

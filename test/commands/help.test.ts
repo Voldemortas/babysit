@@ -1,4 +1,4 @@
-import help from '../../src/commands/help'
+import help from 'src/commands/help'
 import {describe, expect, it} from 'bun:test'
 
 describe('help command', () => {

@@ -1,4 +1,4 @@
-import {CONFIG_SCHEMA} from '../schema'
+import {CONFIG_SCHEMA} from 'src/schema'
 import status from './status'
 import zod from 'zod'
 
