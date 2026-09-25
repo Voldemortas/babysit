@@ -1,13 +1,12 @@
 {
   "name": "babysit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "test": "bun run test .",
     "index": "bun run src/index.ts"
   },
   "dependencies": {
     "dotenv": "^18.0.3",
-    "elysia": "latest",
     "zod": "^4.6.5"
   },
   "devDependencies": {

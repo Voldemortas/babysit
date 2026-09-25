@@ -1,15 +1,15 @@
 # Babysit
 
-A tool to run and monitor processes on linux with bun.
+A tool for running and monitoring processes on Linux with Bun.
 
 ## Install
 
 Install it as a developer dependency with  
-`bunx jsr add @voldemortas/babysit -d`  
+`bunx jsr add @voldemortas/babysit -D`  
 
 
 Or install it globally with  
-`bunx jsr add @voldemortas/babysit -g`
+`bunx jsr add @voldemortas/babysit -G`
 
 ## Set up
 
@@ -27,9 +27,9 @@ const config: Config = {
   command: ['bun', 'run', 'src/index.ts'],//or whatever u want to run
   workDir: import.meta.dir,
   babysitDir: import.meta.dir + '/.babysit',//optional, defaults to <workDir>/.babysit
-  env: {
+  env: {//optional
     NODE_ENV: 'production',
-  },//optional
+  },
   //or use
   //envPath: import.meta.dir + '.env',
   
@@ -38,7 +38,14 @@ const config: Config = {
   retention: '24h',//how long to keep ram/cpu usage data; optional - defaults to '24h'; use 0 to keep the last entry only
   //preserveLogs: false;//NOT IMPLEMENTED
   
-  //web: {}//NOT IMPLEMENTED
+  web: {//optional, if left undefined, then there will be no web monitor server running
+    port: Bun.env.BABYSIT_PORT,//port used for web interface. Configure it inside .env or somewherelese; mandatory!
+    
+    userName: Bun.env.BABYSIT_USERNAME,//same as above; used to login into web interface
+    userPass: Bun.env.BABYSIT_PASSWORD,//same as above; used to login into web interface
+    
+    disableAuth: false//optional, if set to true then userName/userPass is ignored
+  }
 }
 
 babysit(config)
@@ -69,9 +76,14 @@ bun run babysit logs # shows logs of the process
 * organise files better
 * cover everything in tests
 * implement preserve logs
-* add an optional web interface with possibility to preview historical usage data, logs and maybe even stop/start/restart the process; with and without authentication
+* ~~add an optional web interface with possibility to preview historical usage data, logs~~ and maybe even stop/start/restart the process; with and without authentication
 
 -------
 © Andrius Simanaitis, 2026
 
 Licensed under the MIT License. See [LICENSE](./LICENSE).
+
+## Third-party libraries
+
+- [uPlot](https://github.com/leeoniya/uPlot) — charting library, loaded from jsDelivr
+- [bun](https://bun.sh) — js runtime

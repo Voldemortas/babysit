@@ -12,6 +12,7 @@ export const STATUS_SCHEMA = zod.object({
   id: zod.uuid(),
   processPid: zod.number(),
   monitorPid: zod.number(),
+  webPid: zod.number().or(zod.undefined()),
 })
 
 export default async function status({
@@ -24,6 +25,7 @@ export default async function status({
       runningTime: string
       processPid: number
       monitorPid: number
+      webPid: number | undefined
       cpu: string
       ram: string
     }
@@ -52,6 +54,7 @@ export default async function status({
       runningTime: msToString(new Date().getTime() - jsonValue.start.getTime()),
       processPid: jsonValue.processPid,
       monitorPid: jsonValue.monitorPid,
+      webPid: jsonValue.webPid,
       running: true,
       cpu: `${(+cpu).toPrecision(2)}%`,
       ram: bytesToString(+ram),

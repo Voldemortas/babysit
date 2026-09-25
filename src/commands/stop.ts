@@ -4,10 +4,11 @@ import zod from 'zod'
 
 const FILE_NAME = '/babysit.json'
 
-export default async function wrappedStop(
-  config: zod.infer<typeof CONFIG_SCHEMA>
+export default async function stop(
+  config: zod.infer<typeof CONFIG_SCHEMA>,
+  forceKill = false
 ) {
-  const wasKilled = await stop(config)
+  const wasKilled = await unwrappedStop(config, forceKill)
 
   if (wasKilled) {
     const filePath = config.babysitDir + FILE_NAME
@@ -15,13 +16,21 @@ export default async function wrappedStop(
       await Bun.file(filePath).json()
     )
 
-    process.kill(jsonValue.monitorPid, 'SIGINT')
+    if ((await getBabysitId(jsonValue.monitorPid)) === jsonValue.id) {
+      process.kill(jsonValue.monitorPid, 'SIGTERM')
+    }
+    if (
+      !!jsonValue.webPid &&
+      (await getBabysitId(jsonValue.webPid)) === jsonValue.id
+    ) {
+      process.kill(jsonValue.webPid, 'SIGTERM')
+    }
   }
 
   return `Process ${wasKilled ? 'was' : 'was not'} stopped.`
 }
 
-export async function stop(
+export async function unwrappedStop(
   config: zod.infer<typeof CONFIG_SCHEMA>,
   forceKill = false
 ) {

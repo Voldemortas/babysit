@@ -42,11 +42,37 @@ export default async function start(config: zod.infer<typeof CONFIG_SCHEMA>) {
     stderr: 'ignore',
   })
 
+  let webPid: string | undefined = undefined
+
+  if (config.web !== undefined) {
+    const webProcess = Bun.spawn({
+      cmd: ['bun', 'run', import.meta.dir + '/../web/server.ts'],
+      cwd: config.workDir,
+      env: {
+        ...Bun.env,
+        BABYSIT_ID: id,
+        BABYSIT_PATH: config.babysitDir,
+        BABYSIT_PORT: config.web.port,
+        BABYSIT_NO_AUTH: config.web.disableAuth ? 'true' : 'false',
+        BABYSIT_AUTH_NAME: config.web.userName ?? '',
+        BABYSIT_AUTH_PASS: config.web.userPass ?? '',
+      },
+      stdin: 'ignore',
+      stdout: 'ignore',
+      stderr: 'ignore',
+    })
+    webPid = webProcess.pid
+    webProcess.unref()
+
+    console.log(`Web interface is running on port:${config.web.port}`)
+  }
+
   const statusValue = {
     start: new Date(),
     id,
     processPid: subprocess.pid,
     monitorPid: monitorProcess.pid,
+    webPid,
   }
 
   await Bun.write(
@@ -57,5 +83,5 @@ export default async function start(config: zod.infer<typeof CONFIG_SCHEMA>) {
   subprocess.unref()
   monitorProcess.unref()
 
-  return `The process has been successfully started`
+  return `The process has been successfully (re)started`
 }
