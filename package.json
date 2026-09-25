@@ -1,6 +1,6 @@
 {
   "name": "babysit",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "test": "bun run test .",
     "index": "bun run src/index.ts"

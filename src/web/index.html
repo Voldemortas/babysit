@@ -75,7 +75,7 @@
     [],
   ], chart)
 
-  async function update() {
+  async function updateChart() {
     const response = await fetch('/monitor.json')
     const log = await response.json()
 
@@ -95,6 +95,12 @@
 
   resizeObserver.observe(chart)
 
-  update()
-  setInterval(update, 1000)
+  updateChart()
+  setInterval(updateChart, 1000)
+  setInterval(async () => {
+    document.querySelector('#stdout').value = await (await fetch('/stdout')).text()
+  }, 1000)
+  setInterval(async () => {
+    document.querySelector('#stderr').value = await (await fetch('/stderr')).text()
+  }, 1000)
 </script>

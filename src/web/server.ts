@@ -59,6 +59,26 @@ const server = Bun.serve({
         return Response.json(json)
       },
     },
+    '/stdout': {
+      GET: async (req) => {
+        if (!basicAuth(req)) return unauthorized()
+
+        const content = await Bun.file(Bun.env.BABYSIT_PATH + '/out.log').text()
+
+        return new Response(content)
+      },
+    },
+    '/stderr': {
+      GET: async (req) => {
+        if (!basicAuth(req)) return unauthorized()
+
+        const content = await Bun.file(
+          Bun.env.BABYSIT_PATH + '/error.log'
+        ).text()
+
+        return new Response(content)
+      },
+    },
   },
 })
 

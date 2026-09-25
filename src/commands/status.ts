@@ -12,7 +12,7 @@ export const STATUS_SCHEMA = zod.object({
   id: zod.uuid(),
   processPid: zod.number(),
   monitorPid: zod.number(),
-  webPid: zod.number().or(zod.undefined()),
+  webPid: zod.number().or(zod.undefined()).optional(),
 })
 
 export default async function status({
@@ -39,7 +39,9 @@ export default async function status({
   )
   if (
     (await getBabysitId(jsonValue.processPid)) === jsonValue.id &&
-    (await getBabysitId(jsonValue.monitorPid)) === jsonValue.id
+    (await getBabysitId(jsonValue.monitorPid)) === jsonValue.id &&
+    (!jsonValue.webPid ||
+      (await getBabysitId(jsonValue.webPid)) === jsonValue.id)
   ) {
     const {cpu, ram} = (await parseJSONL<
       zod.infer<typeof STATUS_SCHEMA> & {
