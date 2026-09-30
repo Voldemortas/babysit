@@ -51,6 +51,7 @@ export default async function start(config: zod.infer<typeof CONFIG_SCHEMA>) {
       env: {
         ...Bun.env,
         BABYSIT_ID: id,
+        BABYSIT_INTERVAL: config.interval,
         BABYSIT_PATH: config.babysitDir,
         BABYSIT_PORT: config.web.port,
         BABYSIT_NO_AUTH: config.web.disableAuth ? 'true' : 'false',

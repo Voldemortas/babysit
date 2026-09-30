@@ -44,6 +44,14 @@ const server = Bun.serve({
       },
     },
 
+    '/interval': {
+      GET: async (req) => {
+        if (!basicAuth(req)) return unauthorized()
+
+        return new Response(Bun.env.BABYSIT_INTERVAL)
+      },
+    },
+
     '/monitor.json': {
       GET: async (req) => {
         if (!basicAuth(req)) return unauthorized()

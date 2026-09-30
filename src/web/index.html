@@ -2,6 +2,9 @@
 <script src="https://cdn.jsdelivr.net/npm/uplot/dist/uPlot.iife.min.js"></script>
 
 <div id="chart" style="width: 100%"></div>
+<div id="zoomoutinfo">
+  Double click to zoom out
+</div>
 <div style="display: flex; width: 100%; height: calc(100vh - 450px)">
   <div style="width: 50%">
     <h2>Output log</h2>
@@ -14,7 +17,38 @@
 </div>
 
 <script type="module">
+  class Value {
+    #value
+    #onChange
+
+    constructor(value, onChange) {
+      this.#value = value
+      this.#onChange = onChange
+      onChange(value)
+    }
+
+    get value() {
+      return this.#value
+    }
+
+    set value(value) {
+      this.#value = value
+      this.#onChange?.(value)
+    }
+  }
+
+  const intervalTime = +(await (await fetch('/interval')).text())
   const chart = document.querySelector('#chart')
+  const zoomoutinfo = document.querySelector('#zoomoutinfo')
+
+  let zoomedIn = new Value(false, v => {
+    if(v){
+      zoomoutinfo.removeAttribute('style')
+    } else {
+      zoomoutinfo.setAttribute('style', 'display: none;')
+    }
+  })
+
   const plot = new uPlot({
     width: chart.clientWidth-20,
     height: 300,
@@ -54,14 +88,12 @@
     axes: [
       {},
 
-      // Left axis — CPU
       {
         scale: 'cpu',
         values: (u, values) =>
           values.map(value => `${value}%`),
       },
 
-      // Right axis — RAM
       {
         scale: 'ram',
         side: 1,
@@ -69,6 +101,26 @@
           values.map(value => `${(value / 1024 / 1024).toFixed(0)} MB`),
       },
     ],
+
+    hooks: {
+      setScale: [
+        (u, key) => {
+          if (key !== 'x') return
+
+          const x = u.scales.x
+          const data = u.data[0]
+
+          if (!data.length) {
+            zoomedIn.value = false
+            return
+          }
+
+          zoomedIn.value =
+            x.min > data[0] ||
+            x.max < data[data.length - 1]
+        },
+      ],
+    },
   }, [
     [],
     [],
@@ -76,6 +128,10 @@
   ], chart)
 
   async function updateChart() {
+    if (zoomedIn.value) {
+      return
+    }
+
     const response = await fetch('/monitor.json')
     const log = await response.json()
 
@@ -96,11 +152,17 @@
   resizeObserver.observe(chart)
 
   updateChart()
-  setInterval(updateChart, 1000)
+  setInterval(updateChart, intervalTime)
   setInterval(async () => {
+    if (zoomedIn.value) {
+      return
+    }
     document.querySelector('#stdout').value = await (await fetch('/stdout')).text()
-  }, 1000)
+  }, intervalTime)
   setInterval(async () => {
+    if (zoomedIn.value) {
+      return
+    }
     document.querySelector('#stderr').value = await (await fetch('/stderr')).text()
-  }, 1000)
+  }, intervalTime)
 </script>
