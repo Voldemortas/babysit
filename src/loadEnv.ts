@@ -1,6 +1,6 @@
 import {Config} from 'src/types.ts'
 
-export default function loadEnv(): Partial<Config> {
+export default function loadEnv(): Partial<Omit<Config, 'envPath' | 'env'>> {
   return Object.fromEntries(
     Object.entries({
       command: JSON.parse(Bun.env.BABYSIT_COMMAND ?? null) ?? undefined,
