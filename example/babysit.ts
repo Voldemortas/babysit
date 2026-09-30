@@ -1,10 +1,8 @@
-import {Config} from 'src'
-import babysit from 'src/babysit'
+import babysit, {type Config, loadEnv} from 'src'
 
 const config: Config = {
-  command: ['bun', 'run', `${import.meta.dir}/example.ts`],
+  ...loadEnv(),
   workDir: import.meta.dir,
-  babysitDir: import.meta.dir + '/.babysit',
 }
 
 await babysit(config)

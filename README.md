@@ -41,11 +41,39 @@ const config: Config = {
   web: {//optional, if left undefined, then there will be no web monitor server running
     port: Bun.env.BABYSIT_PORT,//port used for web interface. Configure it inside .env or somewherelese; mandatory!
     
-    userName: Bun.env.BABYSIT_USERNAME,//same as above; used to login into web interface
-    userPass: Bun.env.BABYSIT_PASSWORD,//same as above; used to login into web interface
+    userName: admin,//same as above; used to login into web interface
+    userPass: pass,//same as above; used to login into web interface
     
     disableAuth: false//optional, if set to true then userName/userPass is ignored
   }
+}
+
+babysit(config)
+```
+
+Or if you want you can define them in the environment files and use them: 
+
+```.env
+#.env; Set values however you see fit
+#BABYSIT_WORKDIR=
+#BABYSIT_BABYSIT_DIR=
+#BABYSIT_COMMAND=["echo","hello world"]
+#BABYSIT_INTERVAL=
+#BABYSIT_RETENTION=
+#Bun.env.BABYSIT_PRESERVE_LOGS=
+#Bun.env.ENV=
+#Bun.env.ENV_PATH=
+#Bun.env.BABYSIT_PORT=
+#BABYSIT_USERNAME=
+#Bun.env.BABYSIT_USERPASS=
+```
+
+```.ts
+import babysit, {type Config} from "@voldemortas/babysit";
+
+const config: Config = {
+    ...loadEnv(),
+    workDir=import.meta.dir,
 }
 
 babysit(config)
